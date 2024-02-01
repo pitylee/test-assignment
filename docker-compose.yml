@@ -1,0 +1,92 @@
+version: '3'
+services:
+    web:
+        image: nginx:alpine
+        container_name: test-neurony-web
+        volumes:
+            - "./server/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+            - "./server/nginx/default.template.conf:/etc/nginx/conf.d/default.template"
+            - "./server/ssl:/etc/ssl"
+            - "./server/logs:/var/log"
+            - "./web:/var/www/html"
+        ports:
+            - "${NGINX_HTTP_PORT}:80"
+            - "${NGINX_SSL_PORT}:443"
+        environment:
+            - NGINX_HOST=${NGINX_HOST}
+        command: >
+            /bin/sh -c "envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+        restart: always
+        depends_on:
+            - php
+            - mysql
+        networks:
+            - test-neurony
+            - default
+    frontend:
+        build:
+            context: .
+            dockerfile: ./server/frontend/Dockerfile
+        container_name: test-neurony-frontend
+        environment:
+            - NODE_ENV=${NODE_ENV:-production}
+            - NODE_OPTIONS=--openssl-legacy-provider
+        depends_on:
+            - web
+            - php
+        volumes:
+            - "./server/logs:/var/log"
+            - "./web/:/app/"
+        networks:
+            - test-neurony
+    php:
+        #change around and use image if you want to use fpm without building fpm with composer
+        #image: php:${PHP_VERSION}-fpm
+        build:
+            context: .
+            dockerfile: ./server/php/Dockerfile
+            args:
+                - PHP_VERSION
+        container_name: test-neurony-php
+        restart: always
+        tty: true
+        ports:
+            - "9000:9000"
+        volumes:
+            - "./server/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
+            - "./server/logs:/var/log"
+            - "./web:/var/www/html"
+        networks:
+            - test-neurony
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: test-neurony-phpmyadmin
+        ports:
+            - "${PMA_PORT}:80"
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=${MYSQL_HOST}
+        restart: always
+        depends_on:
+            - mysql
+        networks:
+            - test-neurony
+            - default
+    mysql:
+        image: mysql:${MYSQL_VERSION}
+        container_name: test-neurony-mysql
+        restart: always
+        env_file:
+          - .env
+        ports:
+            - "${MYSQL_PORT}:3306"
+        volumes:
+            #- "./server/mysql/data:/var/lib/mysql"
+            - "./server/logs:/var/log"
+        networks:
+            - test-neurony
+networks:
+  test-neurony:
+    name: test_neurony
+    internal: true
+    driver: bridge
