@@ -9,6 +9,10 @@ WORKDIR /app
 # Install and init Tailwind
 RUN npm install -D tailwindcss && npx tailwindcss init
 
+# Expose
+EXPOSE 8080
+EXPOSE 3000
+
 # Copy and fire up entrypoint
 COPY ./server/frontend/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 

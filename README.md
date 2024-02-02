@@ -116,4 +116,4 @@ Whenever you want to open the sites, you can use these links:
 
 Run `docker-compose run --rm frontend` to install npm dependencies and compile the frontend than remove temporary container.
 
-You can also run `docker-compose run --rm frontend npm run watch` after you ran the above and have the frontend setup, if you want to make changes to the project.
+You can also run `docker-compose run --rm frontend npm run hot` after you ran the above and have the frontend setup, if you want to make changes to the project.

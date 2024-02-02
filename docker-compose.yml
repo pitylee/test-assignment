@@ -28,17 +28,17 @@ services:
             context: .
             dockerfile: ./server/frontend/Dockerfile
         container_name: test-neurony-frontend
-        environment:
-            - NODE_ENV=${NODE_ENV:-production}
-            - NODE_OPTIONS=--openssl-legacy-provider
         depends_on:
             - web
-            - php
+        ports:
+            - "${NODE_HOT_PORT}:8080"
+            - 3000:3000
         volumes:
             - "./server/logs:/var/log"
             - "./web/:/app/"
         networks:
             - test-neurony
+            - default
     php:
         #change around and use image if you want to use fpm without building fpm with composer
         #image: php:${PHP_VERSION}-fpm
