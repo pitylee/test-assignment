@@ -194,6 +194,8 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
-    'mix_url' => env('MIX_ASSET_URL', 'http://localhost'),
+    'mix_url' => env('MIX_ASSET_URL', null),
+    'mix_hot_proxy_url' => env('MIX_ASSET_HOT_PROXY_URL', null),
+    
     
 ];

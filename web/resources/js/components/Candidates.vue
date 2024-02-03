@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="p-10">
-      <h1 class="text-4xl font-bold">Candidatesa</h1>
+      <h1 class="text-4xl font-bold">Candidates</h1>
     </div>
     <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
       <div v-for="candidate in candidates" class="rounded overflow-hidden shadow-lg">
@@ -11,10 +11,12 @@
           <p class="text-gray-700 text-base">{{ candidate.description }}</p>
         </div>
         <div class="px-6 pt-4 pb-2"><span v-for="strength in JSON.parse(candidate.strengths)"
-            class="inline-block bg-gray-200  rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ strength }}</span>
+            class="inline-block bg-gray-200  rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{
+              strength }}</span>
         </div>
         <div class="px-6 pb-2"><span v-for="skill in JSON.parse(candidate.soft_skills)"
-            class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ skill }}</span>
+            class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ skill
+            }}</span>
         </div>
         <div class="p-6 float-right">
           <button

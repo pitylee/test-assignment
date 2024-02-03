@@ -23,22 +23,20 @@ mix.alias({
     'ext': path.resolve('node_modules'),
 })
 
-mix.js('resources/js/app.js', 'public/js');
+mix.js('resources/js/app.js', 'public/js/app.js');
 mix.vue({ version: 2, extractVueStyles: true });
-mix.sass('resources/sass/app.scss', 'public/css');
-mix.postCss('resources/css/app.css', 'public/css', [
+mix.sass('resources/sass/app.scss', 'public/css/app.css');
+mix.postCss('resources/css/app.css', 'public/css/modules.css', [
     require('tailwindcss'),
 ]);
 
 if (mix.inProduction()) {
     mix.version();
 }
-
-if (!mix.inProduction()) {
-    // let proxy = process.env.APP_URL.replace(/^(https?:|)\/\//,'');
+else {
     mix.options({
         hmrOptions: {
-            host: process.env.NODE_HOT_HOST,
+            host: '0.0.0.0',
             port: process.env.NODE_HOT_PORT,
         }
     });
@@ -88,31 +86,35 @@ if (!mix.inProduction()) {
                 'Access-Control-Allow-Origin': '*'
             },
             host: '0.0.0.0',
-            port: 8080,
+            port: process.env.NODE_HOT_PORT,
             hot: true,
             proxy: {
-                "*": process.env.MIX_ASSET_URL
+              host: '0.0.0.0',
+              port: process.env.NODE_HOT_PORT,
+              public: process.env.MIX_ASSET_URL
             },
         },
     });
 
     // overriding publicPath as it was using http and causing mixed-content
-    mix.override(c => {
-        c.output.publicPath = process.env.MIX_ASSET_URL
-    });
+    // mix.override(c => {
+    //     c.output.publicPath = process.env.MIX_ASSET_PUBLIC_PATH
+    // });
 
-    mix.browserSync({ 
-        host: "localhost", 
+    mix.browserSync({
+        host: "localhost",
         proxy: 'test-neurony-web',
-        port: 3000,
+        port: process.env.NODE_BROWSER_SYNC_PORT,
         open: false,
         files: [
             'app/**/*.php',
             'resources/views/**/*.php',
+            'resources/css/**/*.css',
+            'resources/sass/**/*.scss',
             'resources/js/**/*.vue',
-            'packages/mixdinternet/frontend/src/**/*.php',
             'public/js/**/*.js',
             'public/css/**/*.css'
         ],
+        cors: true,
     });
 }

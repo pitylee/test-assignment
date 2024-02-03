@@ -6,16 +6,7 @@
 
     <title>MZT test assignment</title>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-    </style>
-
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    @include('partials/head')
 </head>
 
 <body>
@@ -31,7 +22,7 @@
         </div>
     </div>
 
-    <script src="{{ mix('/js/app.js') }}"></script>
+    @include('partials/js')
 </body>
 
 </html>
