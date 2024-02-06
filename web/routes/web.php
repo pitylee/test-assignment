@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('homepage');
+    return view('app');
 });
 
 Route::get('candidates-list', [CandidateController::class, 'index']);

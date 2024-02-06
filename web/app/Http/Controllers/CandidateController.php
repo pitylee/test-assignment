@@ -7,18 +7,24 @@ use App\Models\Company;
 
 class CandidateController extends Controller
 {
-    public function index(){
-    $candidates = Candidate::all();
-    $coins = Company::find(1)->coins;
-    return view('candidates.index', compact('candidates', 'coins'));
-}
+    public function index()
+    {
+        return view('app');
+    }
 
-    public function contact(){
+    public function coins()
+    {
+
+    }
+
+    public function contact()
+    {
         // @todo
         // Your code goes here...
     }
 
-    public function hire(){
+    public function hire()
+    {
         // @todo
         // Your code goes here...
     }

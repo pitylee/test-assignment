@@ -1,3 +1,4 @@
 .env
+.idea
 server/mysql/data
 server/logs

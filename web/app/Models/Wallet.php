@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Wallet extends Model
 {
     use HasFactory;
+
+    /**
+     * The wallet the company belongs to
+     */
+    public function wallet()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }

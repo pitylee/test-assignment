@@ -1,7 +1,7 @@
-
 require('mix-env-file');
 let mix = require('laravel-mix'),
     path = require('path');
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -18,11 +18,6 @@ mix.env(process.env.ENV_FILE);
 mix.setResourceRoot('../');
 mix.setPublicPath("public");
 
-mix.alias({
-    '@': path.resolve('resources'),
-    'ext': path.resolve('node_modules'),
-})
-
 mix.js('resources/js/app.js', 'public/js/app.js');
 mix.vue({ version: 2, extractVueStyles: true });
 mix.sass('resources/sass/app.scss', 'public/css/app.css');
@@ -30,29 +25,38 @@ mix.postCss('resources/css/app.css', 'public/css/modules.css', [
     require('tailwindcss'),
 ]);
 
+const resourcesDir = path.resolve(__dirname, './resources');
+const nodeModulesDir = path.resolve(__dirname, './node_modules');
+
+const aliases = {
+    'vue$': mix.inProduction() ? 'vue/dist/vue.min.js' : 'vue/dist/vue.js',
+    '~components': path.resolve('resources/js/components/'),
+    '~common': path.resolve('resources/js/components/common/'),
+    '~libraries': path.resolve('resources/js/libraries/'),
+    '~models': path.resolve('resources/js/models'),
+    '~store': path.resolve('resources/js/store.js'),
+    '~': path.resolve('resources/js/'),
+};
+
+mix.alias(aliases);
+mix.extract(['vue', 'jquery', 'tw-elements']);
+
 if (mix.inProduction()) {
     mix.version();
 }
-else {
-    mix.options({
-        hmrOptions: {
-            host: '0.0.0.0',
-            port: process.env.NODE_HOT_PORT,
-        }
-    });
 
-    mix.webpackConfig({
-        mode: "development",
+mix.webpackConfig(webpack => {
+    return {
+        mode: process.env.NODE_ENV === "development" ? "development" : "production",
         devtool: "inline-source-map",
         resolve: {
-            // extensions: ['.js', '.jsx', '.css', '.scss', '.json', '.vue'],
-            fallback: { 'path': path.join(__dirname, '../node_modules') },
-            alias: {
-                'vue$': 'vue/dist/vue.js',
-                '@components': path.resolve(__dirname, '../resources/js/components'),
-                '@': path.resolve('resources/js'),
-            },
-            modules: ['components', 'nodeModules', 'node_modules'],
+            extensions: ['.*', '.js', '.jsx', '.css', '.scss', '.json', '.vue'],
+            fallback: {'path': nodeModulesDir},
+            alias: aliases,
+            modules: [
+                resourcesDir,
+                nodeModulesDir,
+            ],
             descriptionFiles: ["package.json"]
         },
         module: {
@@ -74,13 +78,14 @@ else {
                 },
             ],
         },
+        plugins: [new webpack.EnvironmentPlugin({...process.env})],
         devServer: {
-            static: false,
             // static: {
             //     publicPath: "/public/",
             //     serveIndex: true,
             //     watch: true
             // },
+            compress: true,
             allowedHosts: "all",
             headers: {
                 'Access-Control-Allow-Origin': '*'
@@ -89,17 +94,23 @@ else {
             port: process.env.NODE_HOT_PORT,
             hot: true,
             proxy: {
-              host: '0.0.0.0',
-              port: process.env.NODE_HOT_PORT,
-              public: process.env.MIX_ASSET_URL
+                '*': {
+                    target: process.env.MIX_ASSET_HOT_PROXY_URL,
+                    // logLevel: 'debug' /*optional*/
+                }
             },
         },
-    });
+    }
+});
 
-    // overriding publicPath as it was using http and causing mixed-content
-    // mix.override(c => {
-    //     c.output.publicPath = process.env.MIX_ASSET_PUBLIC_PATH
-    // });
+if (!mix.inProduction()) {
+    mix.options({
+        hmrOptions: {
+            // host: '0.0.0.0',
+            host: process.env.NODE_HOT_HOST,
+            port: process.env.NODE_HOT_PORT,
+        }
+    });
 
     mix.browserSync({
         host: "localhost",
