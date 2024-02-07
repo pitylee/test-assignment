@@ -1,92 +1,87 @@
 <template>
-  <div class="max-w-2xl mx-auto">
-    <!-- Button trigger modal -->
-    <button
-        class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-        data-te-ripple-color="light"
-        data-te-ripple-init
-        data-te-target="#exampleModalVarying"
-        data-te-toggle="modal"
-        data-te-whatever="@mdo"
-        type="button">
-      Open modal for @mdo
+  <div class="inline-block">
+    <button v-if="showButton === true"
+            :class="buttonClass"
+            :data-modal-target="id"
+            :data-modal-toggle="id"
+
+            type="button">
+      {{ button }}
     </button>
-    <!-- Modal -->
-    <div
-        id="exampleModalVarying"
-        aria-labelledby="exampleModalVarying"
-        aria-modal="true"
-        class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
-        data-te-modal-init
-        role="dialog"
-        tabindex="-1">
-      <div
-          class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[300px]"
-          data-te-modal-dialog-ref>
-        <div
-            class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
-          <div
-              class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-            <!--Modal title-->
-            <h5
-                id="exampleModalVaryingLabel"
-                class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200">
-              New message to
-            </h5>
-            <button
-                aria-label="Close"
-                class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
-                data-te-modal-dismiss
-                type="button">
-              <svg
-                  class="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M6 18L18 6M6 6l12 12"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
-          <div class="relative flex-auto p-4" data-te-modal-body-ref>
-            <form>
-              <div class="mb-3">
-                <label for="recipient-name">Recipient:</label>
-                <input
-                    id="recipient-name"
-                    class="relative m-0 -mr-0.5 block w-full flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-400 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-                    type="text"/>
-              </div>
-              <div class="mb-3">
-                <label for="message-text">Message:</label>
-                <textarea
-                    id="message-text"
-                    class="relative m-0 -mr-0.5 block w-full flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-400 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"></textarea>
-              </div>
-            </form>
-          </div>
-          <div
-              class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-            <button
-                class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
-                data-te-modal-dismiss
-                data-te-ripple-color="light"
-                data-te-ripple-init
-                type="button">
-              Close
-            </button>
-            <button
-                class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                data-te-ripple-color="light"
-                data-te-ripple-init
-                type="button">
-              Save changes
-            </button>
-          </div>
+
+    <!-- Default Modal -->
+    <div :id="id" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+         tabindex="-1">
+      <div class="relative w-full max-w-lg max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+
+          <LoadingWrapper :loading="loading">
+
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+              <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                {{ title }}
+              </h3>
+              <button
+                  :data-modal-hide="id"
+                  class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                  type="button">
+                <svg aria-hidden="true" class="w-3 h-3" fill="none" viewBox="0 0 14 14"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+                <span class="sr-only">Close</span>
+              </button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4">
+              <slot name="content" v-bind:data="data">Modal content</slot>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+              <footer>
+                <slot name="buttons">
+
+                  <button
+                      v-if="ok"
+                      :class="[
+                        okClass,
+                        noInteract && okCallback !== null ? noInteractClass : null,
+                      ]"
+                      :data-modal-hide="okCallback !== null ? false : id"
+                      :disabled="noInteract"
+                      class="px-5 py-2.5 font-medium text-sm text-center border rounded-lg focus:z-10 focus:ring-4 focus:outline-none"
+                      type="button"
+                      v-on:click="okCallback ? okCallback(data) : () => {}">
+                    <LoadingSmall v-if="loading && okCallback !== null"/>
+                    {{ ok }}
+                  </button>
+
+                  <div class="inline-block ml-2 ms-3"/>
+
+                  <button v-if="cancel"
+                          :class="[
+                        cancelClass,
+                        noInteract && cancelCallback !== null ? noInteractClass : null,
+                      ]"
+                          :data-modal-hide="cancelCallback !== null ? false : id"
+                          :disabled="noInteract"
+                          class="px-5 py-2.5 font-medium text-sm text-center border rounded-lg focus:z-10 focus:ring-4 focus:outline-none"
+                          type="button"
+                          v-on:click="cancelCallback ? cancelCallback(data) : () => {}">
+                    <LoadingSmall v-if="loading && cancelCallback !== null"/>
+                    {{ cancel }}
+                  </button>
+                </slot>
+              </footer>
+            </div>
+
+          </LoadingWrapper>
+
         </div>
       </div>
     </div>
@@ -95,23 +90,85 @@
 
 
 <script>
-import {
-  Modal,
-  Ripple,
-  initTE,
-} from "tw-elements";
+import {modal} from '~libraries/Modal';
+import LoadingWrapper from "~common/LoadingWrapper.vue";
+import LoadingSmall from "~common/LoadingSmall.vue";
 
 export default {
   name: 'Modal',
+  components: {LoadingSmall, LoadingWrapper},
+  props: {
+    id: {
+      type: String,
+      default: 'modal'
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    noInteract: {
+      type: Boolean,
+      default: false
+    },
+    title: {
+      type: String,
+      default: 'Modal'
+    },
+    ok: {
+      type: String,
+      default: 'Ok'
+    },
+    okClass: {
+      type: String,
+      default: 'text-white bg-teal-700 hover:bg-teal-800 focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800'
+    },
+    cancel: {
+      type: String,
+      default: 'Cancel'
+    },
+    cancelClass: {
+      type: String,
+      default: 'text-gray-500 bg-white hover:bg-gray-100 focus:ring-gray-200 border-gray-200 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600'
+    },
+    button: {
+      type: String,
+      default: 'Open'
+    },
+    buttonClass: {
+      type: String,
+      default: 'block w-full md:w-auto text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800'
+    },
+    noInteractClass: {
+      type: String,
+      default: 'bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700'
+    },
+    showButton: {
+      type: Boolean,
+      default: true
+    },
+    okCallback: {
+      type: Function,
+      default: () => {
+      },
+    },
+    cancelCallback: {
+      type: Function,
+      default: null,
+    },
+    data: {
+      type: Object,
+      default: () => {
+      },
+    },
+  },
   data() {
-    return {}
+    return {
+      modal: modal.instance(this.id),
+    }
   },
   async mounted() {
-    initTE({Modal, Ripple});
-
     this.$nextTick(function () {
-      // Code that will run only after the
-      // entire view has been rendered
+      modal.handle(this.id);
     })
   },
 }

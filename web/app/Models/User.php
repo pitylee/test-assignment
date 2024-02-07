@@ -12,7 +12,9 @@ use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
     use AuthenticableTrait;
 
     /**
@@ -46,7 +48,7 @@ class User extends Authenticatable
     ];
 
     protected $with = [
-//        'company',
+        'company',
     ];
 
     /**

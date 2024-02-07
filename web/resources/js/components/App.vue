@@ -3,5 +3,11 @@
 </template>
 
 <script>
-export default {}
+import {initFlowbite} from 'flowbite';
+
+export default {
+  mounted() {
+    initFlowbite();
+  }
+}
 </script>

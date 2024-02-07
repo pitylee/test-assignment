@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import Axios from 'axios';
 import {store} from '~store';
 
@@ -26,7 +25,7 @@ export default () => {
             const apiResponsePromise = Promise.resolve(config);
             apiResponsePromise.then((apiResponse) => {
                 if (apiResponse.status === 401) {
-                    console.log("You are not authorized");
+                    console.log('You are not authorized');
                 }
             });
             return apiResponsePromise;

@@ -15,20 +15,20 @@ const login = async () => {
             })
             .catch(() => null);
     }
-}
+};
 
-const me = async () => {
-    if (!store.get('me')) {
+const me = async (refresh = false) => {
+    if (refresh || !store.get('me')) {
         await loginModel.me()
             .then(({data}) => {
                 store.set('me', data);
             })
             .catch(() => null);
     }
-}
+};
 
 export {
     loginModel,
     login,
     me,
-}
+};

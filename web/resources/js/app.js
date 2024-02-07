@@ -8,7 +8,7 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {store} from '~store'
+import {store} from '~store';
 
 Vue.prototype.$store = store;
 
@@ -28,10 +28,10 @@ const app = new Vue({
     router,
     store,
     render: h => h(App),
-}).$mount('#app')
+}).$mount('#app');
 
 export {
     app,
     router,
     store
-}
+};

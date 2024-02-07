@@ -24,4 +24,5 @@ Route::post('login', [ApiController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('me', [ApiController::class, 'me']);
     Route::get('candidate', [ApiController::class, 'candidate']);
+    Route::post('contact', [ApiController::class, 'contact']);
 });

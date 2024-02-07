@@ -22,4 +22,4 @@ const deserialize = (data) => {
 export {
     serialize,
     deserialize,
-}
+};

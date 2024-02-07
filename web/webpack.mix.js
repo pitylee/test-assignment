@@ -39,7 +39,7 @@ const aliases = {
 };
 
 mix.alias(aliases);
-mix.extract(['vue', 'jquery', 'tw-elements']);
+mix.extract(['vue', 'jquery']);
 
 if (mix.inProduction()) {
     mix.version();

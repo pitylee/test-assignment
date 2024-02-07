@@ -1,5 +1,5 @@
 import Homepage from './components/pages/homepage/Homepage.vue';
-import Candidates from "./components/pages/candidates/Candidates.vue";
+import Candidates from './components/pages/candidates/Candidates.vue';
 
 const routes = [
     {

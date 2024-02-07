@@ -67,6 +67,7 @@ services:
             - "./web:/var/www/html"
         networks:
             - test-neurony
+            - default
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: test-neurony-phpmyadmin

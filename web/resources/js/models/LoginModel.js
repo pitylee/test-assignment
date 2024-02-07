@@ -11,6 +11,6 @@ export default class LoginModel extends BaseModel {
     }
 
     me() {
-        return this.custom(`/me`, {}, 'get');
+        return this.custom('/me', {}, 'get');
     }
 }

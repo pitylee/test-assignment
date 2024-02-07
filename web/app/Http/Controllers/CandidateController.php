@@ -14,7 +14,6 @@ class CandidateController extends Controller
 
     public function coins()
     {
-
     }
 
     public function contact()

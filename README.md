@@ -122,6 +122,7 @@ Run `docker-compose run --rm frontend` to install npm dependencies and compile t
 
 You can also run `docker-compose run --rm --service-ports frontend npm run hot` after you ran the above and have the frontend setup, if you want to make changes to the project.
 
+It is possible running eslint with `docker-compose run --rm --service-ports frontend npm run eslint`.
 
 ## PHPMyAdmin
 
@@ -158,6 +159,11 @@ It is also possible to run any kind of command with the patterns:
 
 - `docker-compose logs {container}`
 
+> empty all the logs
+
+- `docker-compose run --rm --service-ports frontend npm run eslintfix`
+
+> Run eslint fix
 
 ### Examples
 

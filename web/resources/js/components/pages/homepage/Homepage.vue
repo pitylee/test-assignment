@@ -14,10 +14,8 @@
 <script>
 import LoginModel from '~models/LoginModel';
 import {store} from '~store';
-import Modal from "../../common/Modal.vue";
 
 export default {
-  components: {Modal},
   created() {
     const loginModel = new LoginModel();
     loginModel.create()
