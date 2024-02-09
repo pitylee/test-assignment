@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Message;
 use App\Models\Wallet;
+use App\Models\WalletTransactions;
+use Illuminate\Support\Facades\Auth;
 use Mockery\Exception;
 
 final class WalletService
@@ -11,15 +14,28 @@ final class WalletService
     {
     }
 
-    public function chargeAmount(int $amount, Wallet $wallet): bool
+    public function chargeAmount(int $amount, Wallet $wallet, array $metadata = []): bool
     {
-        if ($wallet->coins < $amount) {
+        $previousAmount = $wallet->coins;
+        $newAmount = $previousAmount + $amount;
+        if ($newAmount < 0) {
             throw new Exception('There is not enough coins in this wallet!');
         }
 
         try {
-            $wallet->coins = $wallet->coins + $amount;
+            $wallet->coins = $newAmount;
             $wallet->save();
+
+            $transaction = new WalletTransactions([
+                'amount' => $amount,
+                'coins_current' => $newAmount,
+                'coins_previous' => $previousAmount,
+                'metadata' => $metadata,
+            ]);
+            $transaction->wallet()->associate($wallet);
+            $transaction->user()->associate(Auth::user());
+            $transaction->save();
+
             return true;
         } catch (\Throwable $exception) {
             throw new $exception();

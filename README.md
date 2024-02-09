@@ -130,10 +130,14 @@ When connecting to pma you will have to use `mysql` for the server as it will co
 
 You can log in with the users set in the .env.
 
+## PHP
 
-## XDebug
+PHPCBF can be run upon development for beautifying the code with the command:
 
-Debugging can be done in the IDE that you love working with, by default xdebug 3 for php 8, using your internal ip, yet this can be tweaked around to follow host, or use xdebug's new gateway host resolver.
+`docker-compose exec -it php composer run-script phpcbf`
+
+Debugging with Xdebug can be done in the IDE that you love working with, by default xdebug 3 for php 8, using your
+internal ip, yet this can be tweaked around to follow host, or use xdebug's new gateway host resolver.
 
 Make sure your ide is listening on the configured port with telnet or netcat:
 
@@ -164,6 +168,10 @@ It is also possible to run any kind of command with the patterns:
 - `docker-compose run --rm --service-ports frontend npm run eslintfix`
 
 > Run eslint fix
+
+- `docker-compose exec -it php composer run-script phpcbf`
+
+> PHPCBF with fix
 
 ### Examples
 

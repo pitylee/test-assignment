@@ -41,7 +41,6 @@ RUN curl -L -o /var/www/html/composer.phar -sS https://getcomposer.org/download/
 # Could copy .env files here and use it as a template here
 
 EXPOSE 9000
-EXPOSE 9003
 
 # Copy and fire up entrypoint
 COPY ./server/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
