@@ -30,47 +30,75 @@
     </div>
     <LoadingWrapper :loading="loading">
       <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-        <div v-for="(candidate, key) in candidates" class="rounded overflow-hidden shadow-lg">
+        <div v-for="(candidate, key) in candidates" class="rounded overflow-hidden shadow-lg flex flex-col">
           <img alt="" class="w-full" src="/avatar.png">
           <div class="px-6 py-4">
             <div class="font-bold text-xl mb-2">{{ candidate.name }}</div>
             <p class="text-gray-700 text-base">{{ candidate.description }}</p>
           </div>
-          <div class="px-6 pt-4 pb-2"><span v-for="strength in candidate.strengths"
-                                            class="inline-block bg-gray-200  rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{
-              strength
-            }}</span>
+          <div class="px-6 pt-4 pb-2">
+            <span v-for="strength in candidate.strengths"
+                  class="inline-block bg-gray-200  rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+              {{ strength }}
+            </span>
           </div>
-          <div class="px-6 pb-2"><span v-for="skill in candidate.soft_skills"
-                                       class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{
-              skill
-            }}</span>
+          <div class="px-6 pb-2">
+            <span v-for="skill in candidate.soft_skills"
+                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+              {{ skill }}
+            </span>
           </div>
 
-          <div class="p-6 float-right">
-            <Modal
-                :id="`contact-${candidate.id}`"
-                :data="candidates[key]"
-                :loading="modalLoading"
-                :no-interact="candidate.success || false"
-                :okCallback="() => sendMessage(candidate)"
-                :title="`Contact ${candidate.name}`"
-                button="Contact"
-                buttonClass="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-                cancel="Close"
-                ok="Send"
-            >
-              <template v-slot:content="slotProps">
-                <ContactForm v-model="slotProps"/>
-              </template>
-            </Modal>
+          <div class="w-full flex-grow flex items-end p-6">
 
-            <button
-                class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 hover:bg-teal-100 rounded shadow">
-              Hire
-            </button>
+            <div class="w-1/2 flex items-center opacity-30">
+              <!-- Center vertically -->
+              <div class="h-full pb-2 flex flex-col justify-center">
+                <div
+                    v-if="typeof candidate.messages.contacted || false"
+                    class="bg-teal-100 text-teal-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-teal-700 dark:text-teal-400 border border-teal-500 select-none">
+                  <svg aria-hidden="true" class="w-2.5 h-2.5 me-1.5 fill-green-500" fill="currentColor"
+                       viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586Z"/>
+                  </svg>
+                  <span class="pl-2">{{ candidate.messages.ago || 'Contacted' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-1/2 flex justify-center items-center">
+
+              <Modal
+                  :id="`contact-${candidate.id}`"
+                  :data="candidates[key]"
+                  :loading="modalLoading"
+                  :no-interact="candidate.success || false"
+                  :okCallback="() => sendMessage(candidate)"
+                  :title="`Contact ${candidate.name}`"
+                  button="Contact"
+                  buttonClass="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                  cancel="Close"
+                  ok="Send"
+              >
+                <template v-slot:content="slotProps">
+                  <ContactForm v-model="slotProps"/>
+                </template>
+              </Modal>
+
+              <div class="ml-2"/>
+
+              <button
+                  class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 hover:bg-teal-100 rounded shadow">
+                Hire
+              </button>
+
+            </div>
           </div>
+          <!-- actions end -->
         </div>
+        <!-- candidates end -->
+
       </div>
     </LoadingWrapper>
   </div>

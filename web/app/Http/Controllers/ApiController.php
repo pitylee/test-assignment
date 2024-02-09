@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidate;
+use App\Models\Message;
 use App\Models\User;
 use App\Services\ContactService;
 use Illuminate\Support\Facades\Auth;
@@ -62,9 +63,20 @@ class ApiController extends Controller
 
     public function candidate()
     {
-        $candidates = Candidate::limit(2)->get();
         return [
-            'data' => $candidates,
+            'data' => Candidate::limit(2)->get()->map(function ($candidate, $key) {
+                $messagesBetweenUserAndCandidate = Message::where([
+                    ['user_id', '=', Auth::id()],
+                    ['candidate_id', '=', $candidate->id],
+                ]);
+                $candidate->messages = [
+                    'count' => $messagesBetweenUserAndCandidate->count(),
+                    'contacted' => $messagesBetweenUserAndCandidate->count() > 0,
+                    'ago' => $messagesBetweenUserAndCandidate->orderBy('created_at', 'desc')->first()->created_at->diffForHumans(),
+                ];
+
+                return $candidate;
+            }),
             'auth' => Auth::check(),
         ];
     }
