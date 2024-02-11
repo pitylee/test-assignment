@@ -69,13 +69,13 @@
                   <div v-if="candidate?.messages.contacted || false"
                        class="inline-block bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-blue-700 dark:text-blue-400 border border-blue-500 select-none">
                     <BriefcaseIcon class="w-3 h-3 me-1.5 text-blue-500"/>
-                    <span class="pl-1">{{ candidate?.messages.ago || 'Contacted' }}</span>
+                    <span class="pl-1">{{ candidate?.messages.ago || 'Contacted already' }}</span>
                   </div>
 
                   <div v-if="candidate?.hired || false"
                        class="inline-block bg-teal-100 text-teal-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-teal-700 dark:text-teal-400 border border-teal-500 select-none">
                     <AnnotationIcon class="w-3 h-3 me-1.5 text-teal-500"/>
-                    <span class="pl-1">{{ candidate?.hired?.ago || 'Hired' }}</span>
+                    <span class="pl-1">Hired</span>
                   </div>
                 </div>
               </div>
@@ -156,7 +156,7 @@
                 </Modal>
 
                 <Modal
-                    v-if="candidate?.messages.contacted !== true"
+                    v-else-if="candidate?.messages.contacted !== true"
                     :id="`hire-disabled-${candidate?.id}`"
                     :cancel="false"
                     :loading="modalLoading"

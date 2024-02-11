@@ -28,17 +28,20 @@ class CandidateController extends Controller
 
     public function candidates()
     {
+        $companyId = User::find(Auth::id())->with('company')->first()->id;
         return response()->json([
-            'data' => Candidate::limit(2)->get()->mapWithKeys(function ($candidate, $key) {
+            'data' => Candidate::limit(2)->get()->mapWithKeys(function ($candidate, $key) use ($companyId) {
                 $messagesBetweenUserAndCandidate = Message::where([
                     ['user_id', '=', Auth::id()],
                     ['candidate_id', '=', $candidate->id],
                 ]);
+                $employmentsByCompany = $candidate->employmentsByCompany($companyId);
                 $candidate->messages = [
                     'count' => $messagesBetweenUserAndCandidate->count(),
                     'contacted' => $messagesBetweenUserAndCandidate->count() > 0,
                     'ago' => $messagesBetweenUserAndCandidate->orderBy('created_at', 'desc')->first()?->created_at->diffForHumans() ?? null,
                 ];
+                $candidate->hired = $employmentsByCompany->count() > 0;
 
                 return [$candidate->id => $candidate];
             })->toArray(),
@@ -48,16 +51,19 @@ class CandidateController extends Controller
 
     public function candidate(string $id)
     {
-        return Candidate::where([['id', '=', $id]])->get()->map(function ($candidate, $key) {
+        $companyId = User::find(Auth::id())->with('company')->first()->id;
+        return Candidate::where([['id', '=', $id]])->get()->map(function ($candidate, $key) use ($companyId) {
             $messagesBetweenUserAndCandidate = Message::where([
                 ['user_id', '=', Auth::id()],
                 ['candidate_id', '=', $candidate->id],
             ]);
+            $employmentsByCompany = $candidate->employmentsByCompany($companyId);
             $candidate->messages = [
                 'count' => $messagesBetweenUserAndCandidate->count(),
                 'contacted' => $messagesBetweenUserAndCandidate->count() > 0,
                 'ago' => $messagesBetweenUserAndCandidate->orderBy('created_at', 'desc')->first()?->created_at->diffForHumans() ?? null,
             ];
+            $candidate->hired = $employmentsByCompany->count() > 0;
 
             return $candidate;
         })->first();

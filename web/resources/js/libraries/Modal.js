@@ -55,7 +55,7 @@ class MyModal {
         const handleModalHide = () => {
             current.hide();
         };
-        handleButton('data-modal-toggle', (event) => {
+        handleButton('data-modal-toggle', () => {
             current.toggle();
         });
         handleButton('data-modal-show', handleModalShow);

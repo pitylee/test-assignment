@@ -30,4 +30,17 @@ class Candidate extends Model
         'strengths' => 'array',
         'soft_skills' => 'array',
     ];
+
+    /**
+     * The wallet of the company
+     */
+    public function employments()
+    {
+        return $this->hasMany(Employment::class, 'candidate_id');
+    }
+
+    public function employmentsByCompany($companyId)
+    {
+        return $this->employments()->where('company_id', $companyId);
+    }
 }

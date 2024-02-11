@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from 'vue';
 
 class State {
     constructor() {
@@ -55,7 +55,7 @@ class State {
             ...{fields, response},
         };
         console.log(errors, store._state.errors[key]);
-        Vue.set(store._state.errors, key, store._state.errors[key])
+        Vue.set(store._state.errors, key, store._state.errors[key]);
     }
 }
 
