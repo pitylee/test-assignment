@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function login()
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(): \Illuminate\Http\JsonResponse
     {
         $user = User::find(1);
         $credentials = [
@@ -42,7 +45,10 @@ class AuthController extends Controller
         }
     }
 
-    public function me()
+    /**
+     * @return array
+     */
+    public function me(): array
     {
         return [
             'data' => User::with('companyWithWallet')->find(Auth::id()),

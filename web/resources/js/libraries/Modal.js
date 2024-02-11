@@ -8,6 +8,9 @@ class MyModal {
         this.instance(id, options);
     }
 
+    /*
+    * Create instances with general options and put aside to use later on.
+    * */
     instance(id = 'modalId', options = {}) {
         if (!this._modals[id]) {
             this._modals[id] = new Modal(document.getElementById(id), {
@@ -33,6 +36,9 @@ class MyModal {
         return this._id;
     }
 
+    /*
+    * For when [data] attributes of Flowbite Modal will fail on dynamic elements, we fallback to javascript event listeners
+    * */
     handle(id) {
         if (!id) {
             return;

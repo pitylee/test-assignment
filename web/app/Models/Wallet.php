@@ -12,7 +12,7 @@ class Wallet extends Model
     /**
      * The wallet the company belongs to
      */
-    public function wallet()
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
     }

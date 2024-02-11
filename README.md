@@ -2,6 +2,8 @@
 
 This is a test assignment in Laravel with PHP 8.0 that can be run in a local environment included in this repository.
 
+<img src="demo.gif" alt="demo" style="width:800px;"/>
+
 ## Before we begin
 
 It is assumed that you have a working setup with the latest git, docker and docker-compose, you can run it locally.

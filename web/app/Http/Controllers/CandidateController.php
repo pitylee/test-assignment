@@ -16,17 +16,27 @@ use Illuminate\Http\Request;
 
 class CandidateController extends Controller
 {
+    /**
+     * Rules for hire endpoint
+     */
     public const HIRE_RULES = [
         'id' => 'required|numeric|exists:candidates,id',
     ];
 
+    /**
+     * @param CandidateService $candidateService
+     */
     public function __construct(
         protected CandidateService $candidateService,
-    )
-    {
+    ) {
     }
 
-    public function candidates()
+    /**
+     * Get whole list of candidates
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function candidates(): \Illuminate\Http\JsonResponse
     {
         $companyId = User::find(Auth::id())->with('company')->first()->id;
         return response()->json([
@@ -49,7 +59,13 @@ class CandidateController extends Controller
         ]);
     }
 
-    public function candidate(string $id)
+    /**
+     * Get endpoint for one candidate
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function candidate(string $id): mixed
     {
         $companyId = User::find(Auth::id())->with('company')->first()->id;
         return Candidate::where([['id', '=', $id]])->get()->map(function ($candidate, $key) use ($companyId) {
@@ -69,7 +85,13 @@ class CandidateController extends Controller
         })->first();
     }
 
-    public function hire(Request $request)
+    /**
+     * Hire post endpoint that will make the Employment possible
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|true[]
+     */
+    public function hire(Request $request): array|\Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), self::HIRE_RULES);
 

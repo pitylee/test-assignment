@@ -9,14 +9,15 @@ class Company extends Model
 {
     use HasFactory;
 
-    protected $with = [
-        //'wallet',
-    ];
+    /**
+     * @var array
+     */
+    protected $with = [];
 
     /**
      * The wallet of the company
      */
-    public function wallet()
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Wallet::class, 'company_id');
     }

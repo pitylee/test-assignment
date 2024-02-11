@@ -13,7 +13,13 @@ class ContactEmail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    private $message;
+    /**
+     * @var string
+     */
+    private string $message;
+    /**
+     * @var Candidate
+     */
     private Candidate $candidate;
 
     /**
@@ -29,11 +35,45 @@ class ContactEmail extends Mailable
     }
 
     /**
+     * @return string
+     */
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function setMessage(string $message): void
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * @return Candidate
+     */
+    public function getCandidate(): Candidate
+    {
+        return $this->candidate;
+    }
+
+    /**
+     * @param Candidate $candidate
+     * @return void
+     */
+    public function setCandidate(Candidate $candidate): void
+    {
+        $this->candidate = $candidate;
+    }
+
+    /**
      * Build the message.
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this->markdown('emails.ContactEmail')
             ->with(

@@ -32,14 +32,18 @@ class Candidate extends Model
     ];
 
     /**
-     * The wallet of the company
+     * The employments of the candidate
      */
-    public function employments()
+    public function employments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Employment::class, 'candidate_id');
     }
 
-    public function employmentsByCompany($companyId)
+    /**
+     * @param $companyId
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function employmentsByCompany($companyId): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->employments()->where('company_id', $companyId);
     }

@@ -241,12 +241,16 @@ export default {
           message: candidate?.message,
         },
       };
+
+      // Id may differ from the array key, so we work with candidate key
+      // Then we reset the validated, success and loading fields, so that it can be dynamically rerun
       const candidateKey = Object.keys(this.candidates).find(key => this.candidates[key].id === candidate.id);
       this.setValidated(candidateKey, null);
       this.candidates[candidateKey].success = false;
       this.candidates[candidateKey].loading = this.modalLoading;
       this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
 
+      // Attempt to send message, if success, will reload coins and the candidate worked will be reloaded
       await contactModel.sendMessage()
           .then(({data}) => {
             if (data?.success === true) {
@@ -317,6 +321,8 @@ export default {
     hire: async function (id) {
       this.loading = true;
 
+      // Id may differ from the array key, so we work with candidate key
+      // Then we reset the validated, success and loading fields, so that it can be dynamically rerun
       const candidateKey = Object.keys(this.candidates).find(key => this.candidates[key].id === id);
 
       this.setValidated(candidateKey, null);
@@ -324,6 +330,8 @@ export default {
       this.candidates[candidateKey].loading = this.modalLoading;
       this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
 
+      // Attempt to hire by id, if success reload coins and show success message in modal
+      // After some time the modal gets closed and the candidate reloaded
       await this.candidateModel.hire(id)
           .then((data) => {
             if (data?.success === true) {

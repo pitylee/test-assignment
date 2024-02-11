@@ -7,7 +7,6 @@ class State {
 
     // Getter for the entire state object
     get state() {
-        console.log('called');
         return this._state;
     }
 
@@ -54,7 +53,6 @@ class State {
             ...{error, detail},
             ...{fields, response},
         };
-        console.log(errors, store._state.errors[key]);
         Vue.set(store._state.errors, key, store._state.errors[key]);
     }
 }

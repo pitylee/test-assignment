@@ -51,7 +51,7 @@ class WalletTransactions extends Model
     /**
      * The user that sent the message
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -59,7 +59,7 @@ class WalletTransactions extends Model
     /**
      * The user that sent the message
      */
-    public function company()
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
@@ -67,7 +67,7 @@ class WalletTransactions extends Model
     /**
      * The candidate the message was sent to
      */
-    public function wallet()
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Wallet::class, 'wallet_id');
     }

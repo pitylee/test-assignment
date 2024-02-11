@@ -3,6 +3,9 @@ import {store} from '~store';
 
 const loginModel = new LoginModel();
 
+/*
+* Will login to retrieve a token, it is a simple auth, mainly to have a user on backend
+* */
 const login = async () => {
     if (!store.get('token')) {
         // usually redirect here?
@@ -17,6 +20,9 @@ const login = async () => {
     }
 };
 
+/*
+* Will get data from /me endpoint, containing user and coins data
+* */
 const me = async (refresh = false) => {
     if (refresh || !store.get('me')) {
         await loginModel.me()
