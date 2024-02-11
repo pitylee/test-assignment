@@ -4,7 +4,11 @@
       <div v-if="Object.values(error).filter(Boolean).length"
            class="relative p-4 pl-8 text-sm text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
         <p v-if="isDev && error?.stack" :id="key" class="" v-text="error?.stack"/>
-        <p v-else-if="error?.detail" :id="key" class="" v-text="error.detail"/>
+
+        <p v-if="error?.detail" :id="key" class="" v-text="error.detail"/>
+        <p v-else-if="error?.response?.message" :id="key" class="" v-text="error.response.message"/>
+        <p v-else-if="error?.response?.data?.detail" :id="key" class="" v-text="error.response.data.detail"/>
+        <p v-else-if="error?.response?.data?.message" :id="key" class="" v-text="error.response.data.message"/>
         <p v-else-if="error?.message" :id="key" class="" v-text="error.message"/>
         <p v-else-if="error?.error" :id="key" class="" v-text="error.error"/>
 
