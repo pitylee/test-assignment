@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\CandidateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +21,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('login', [ApiController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('me', [ApiController::class, 'me']);
-    Route::get('candidate', [ApiController::class, 'candidate']);
-    Route::post('contact', [ApiController::class, 'contact']);
+    // Auth
+    Route::get('me', [AuthController::class, 'me']);
+
+    // Candidate
+    Route::get('candidates', [CandidateController::class, 'candidates']);
+    Route::get('candidates/{id}', [CandidateController::class, 'candidate']);
+
+    // Contact
+    Route::post('contact', [ContactController::class, 'contact']);
 });

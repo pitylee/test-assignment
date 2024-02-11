@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('app');
+Route::get('/{route}', function ($route) {
+    return view('app', ['route' => $route]);
 });
-
-Route::get('candidates-list', [CandidateController::class, 'index']);
-Route::post('candidates-contact', [CandidateController::class, 'contact']);
