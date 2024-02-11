@@ -20,8 +20,8 @@ final class ContactService
     public function sendEmail(int $id, string $message, ?string $subject = null): array
     {
         $user = User::find(Auth::id())->first();
-        $company = $user->company()->first();
-        $candidate = Candidate::find($id)->first();
+        $company = $user->company()->with('wallet')->first();
+        $candidate = Candidate::find($id);
         $charged = false;
         $metadata = [
             'candidate_id' => $candidate->id,
