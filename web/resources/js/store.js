@@ -37,12 +37,17 @@ class State {
     }
 
     // Set method to set a property value
-    setErrors(errors = null) {
-        if (typeof store._state.errors === 'undefined') {
-            store._state.errors = {};
+    setErrors(errors = null, reset = false) {
+        if (reset !== false) {
+            delete store._state.errors[reset];
+            return;
         }
         const {stack, message, error, detail, fields} = errors;
         const key = btoa(`${stack ?? error ?? detail}`);
+
+        if (typeof store._state.errors[key] === 'undefined') {
+            store._state.errors = {};
+        }
 
         store._state.errors[key] = {
             ...{stack, message},
