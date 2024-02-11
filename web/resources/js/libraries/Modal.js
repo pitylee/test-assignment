@@ -3,27 +3,30 @@ import {Modal} from 'flowbite';
 class MyModal {
     constructor(id = 'modalId', options = {}) {
         this._id = id;
+        this._modals = {}; // Map to store modal instances
         this.debug = false;
         this.instance(id, options);
     }
 
     instance(id = 'modalId', options = {}) {
-        this._instance = new Modal(document.getElementById(id), {
-            placement: 'center',
-            backdrop: 'dynamic',
-            backdropClasses:
-                'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
-            closable: true,
-            onShow: () => this.onShow(),
-            onHide: () => this.onHide(),
-            onToggle: () => this.onToggle(),
-            ...options
-        }, {
-            id: 'modalEl',
-            override: true
-        });
+        if (!this._modals[id]) {
+            this._modals[id] = new Modal(document.getElementById(id), {
+                placement: 'center',
+                backdrop: 'dynamic',
+                backdropClasses:
+                    'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
+                closable: true,
+                onShow: () => this.onShow(),
+                onHide: () => this.onHide(),
+                onToggle: () => this.onToggle(),
+                ...options
+            }, {
+                id: id,
+                override: true
+            });
+        }
 
-        return this;
+        return this._modals[id];
     }
 
     getId() {
@@ -61,31 +64,35 @@ class MyModal {
         handleButton('data-modal-close', handleModalHide);
     }
 
+    current() {
+        return this.instance(this.getId());
+    }
+
     show() {
-        return this._instance.show();
+        return this.current().show();
     }
 
     hide() {
-        setTimeout(() => {
-            const backdrop = document.querySelector(' div[modal-backdrop]');
-            if (backdrop) {
-                backdrop.remove();
-            }
-        }, 1000);
+        // setTimeout(() => {
+        //     const backdrop = document.querySelector(' div[modal-backdrop]');
+        //     if (backdrop) {
+        //         backdrop.remove();
+        //     }
+        // }, 3000);
 
-        return this._instance.hide();
+        return this.current().hide();
     }
 
     toggle() {
-        return this._instance.toggle();
+        return this.current().toggle();
     }
 
     isVisible() {
-        return this._instance.isVisible();
+        return this.current().isVisible();
     }
 
     isHidden() {
-        return this._instance.isHidden();
+        return this.current().isHidden();
     }
 
 

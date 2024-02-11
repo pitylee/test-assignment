@@ -58,4 +58,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+
+    /**
+     * Company with wallet the user belongs to
+     */
+    public function companyWithWallet()
+    {
+        return $this->belongsTo(Company::class, 'company_id')->with('wallet');
+    }
 }

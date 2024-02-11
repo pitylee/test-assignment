@@ -55,7 +55,7 @@ export default class BaseModel {
     async custom(url, params, method = 'post') {
         if (method === 'get') {
             return this.api
-                .get(url, {params})
+                .get(url, params)
                 .then((data) => {
                     const formattedData = deserialize(data.data);
                     return Promise.resolve(formattedData);
@@ -63,7 +63,7 @@ export default class BaseModel {
         }
 
         return this.api
-            .post(url, {params})
+            .post(url, params)
             .then((data) => {
                 const formattedData = deserialize(data.data);
                 return Promise.resolve(formattedData);

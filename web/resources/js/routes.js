@@ -11,7 +11,11 @@ const routes = [
         path: '/candidates-list',
         name: 'candidates',
         component: Candidates
-    }
+    },
+    {
+        path: '*',
+        redirect: '/',
+    },
 ];
 
 export default routes;
