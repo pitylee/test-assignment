@@ -37,6 +37,7 @@
         <div
             v-for="(candidate, key) in candidates"
             :class="[
+                candidate?.strengths?.includes('Wordpress') ? 'hidden' : null,
                 (candidate?.hired || false) ? 'shadow-sm shadow-teal-100' : (
                     (candidate?.messages.contacted || false) ? 'shadow-sm shadow-blue-300' : null
                 )
@@ -49,12 +50,18 @@
           </div>
           <div class="px-6 pt-4 pb-2">
             <span v-for="strength in candidate?.strengths"
+                  :class="[
+                      desiredStrengths.includes(strength) ? 'bg-green-500 text-green-800' : null,
+                  ]"
                   class="inline-block bg-gray-200  rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
               {{ strength }}
             </span>
           </div>
           <div class="px-6 pb-2">
             <span v-for="skill in candidate?.soft_skills"
+                  :class="[
+                      desiredSoftSkills.includes(skill) ? 'bg-blue-500 text-blue-800' : null,
+                  ]"
                   class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
               {{ skill }}
             </span>
@@ -179,6 +186,8 @@
 
       </div>
     </LoadingWrapper>
+
+    <MvpCandidates />
   </div>
 </template>
 
@@ -193,10 +202,11 @@ import ContactForm from "./partials/ContactForm.vue";
 import ContactModel from "../../../models/ContactModel";
 import {BriefcaseIcon, AnnotationIcon} from '@vue-hero-icons/solid'
 import GlobalErrors from "~common/GlobalErrors.vue";
+import MvpCandidates from "./partials/MvpCandidates.vue";
 
 export default {
   name: 'Candidates',
-  components: {GlobalErrors, ContactForm, Modal, LoadingWrapper, BriefcaseIcon, AnnotationIcon},
+  components: {MvpCandidates, GlobalErrors, ContactForm, Modal, LoadingWrapper, BriefcaseIcon, AnnotationIcon},
   data() {
     return {
       modal,
@@ -208,6 +218,9 @@ export default {
       candidates: [],
       desiredStrengths: [
         'Vue.js', 'Laravel', 'PHP', 'TailwindCSS'
+      ],
+      desiredSoftSkills: [
+        'Team player', 'PHP'
       ],
       candidateModel: null,
       isDev: process.env.NODE_ENV === 'development'
