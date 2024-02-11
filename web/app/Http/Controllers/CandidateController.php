@@ -30,7 +30,7 @@ class CandidateController extends Controller
     {
         $companyId = User::find(Auth::id())->with('company')->first()->id;
         return response()->json([
-            'data' => Candidate::limit(2)->get()->mapWithKeys(function ($candidate, $key) use ($companyId) {
+            'data' => Candidate::all()->mapWithKeys(function ($candidate, $key) use ($companyId) {
                 $messagesBetweenUserAndCandidate = Message::where([
                     ['user_id', '=', Auth::id()],
                     ['candidate_id', '=', $candidate->id],

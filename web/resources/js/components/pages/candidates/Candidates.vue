@@ -110,10 +110,11 @@
                     :id="`hire-${candidate?.id}`"
                     :loading="modalLoading"
                     :okCallback="() => hire(candidate?.id)"
+                    :cancel="candidate?.hired === true ? 'Close' : 'No'"
                     :title="`Hire ${candidate?.name}`"
                     button="Hire"
                     buttonClass="font-semibold py-2 px-4 rounded shadow hover:bg-teal-200 dark:bg-gray-100 dark:text-gray-100 border border-gray-200 bg-gray-100 text-gray-800"
-                    cancel="No"
+                    :cancelCallback="() => { modal.instance(`hire-${candidate?.id}`).hide(); loadCandidate(candidate.id); }"
                     ok="Yes"
                 >
                   Are you sure you want to hire them?
@@ -130,12 +131,13 @@
                     </p>
                   </template>
 
-                  <template v-if="typeof candidate.validated === 'string'" v-slot:buttons="slotProps">
+                  <template v-if="typeof candidate.validated === 'string' || candidate?.success === true"
+                            v-slot:buttons>
                     <button
                         :data-modal-hide="`hire-${candidate.id}`"
                         class="px-5 py-2.5 font-medium text-sm text-center border rounded-lg focus:z-10 focus:ring-4 focus:outline-none"
                         type="button"
-                        v-on:click="() => { modal.instance(`hire-${candidate?.id}`).hide(); loadCandidate(candidate.id); }">
+                        v-on:click="() => { modal.instance(`hire-${candidate?.id}`).hide(); }">
                       Close
                     </button>
                   </template>
@@ -144,7 +146,7 @@
 
                 <Modal
                     v-else-if="candidate?.hired || false"
-                    :id="`hired-${candidate?.id}`"
+                    :id="`hire-${candidate?.id}`"
                     :cancel="false"
                     :loading="modalLoading"
                     :title="`${candidate?.name} is hired`"
@@ -157,7 +159,7 @@
 
                 <Modal
                     v-else-if="candidate?.messages.contacted !== true"
-                    :id="`hire-disabled-${candidate?.id}`"
+                    :id="`hire-${candidate?.id}`"
                     :cancel="false"
                     :loading="modalLoading"
                     :title="`Contact ${candidate?.name} first`"
@@ -243,7 +245,7 @@ export default {
               setTimeout(() => {
                 this.modal.instance(`contact-${candidate?.id}`).hide()
                 this.loadCandidate(candidate.id);
-              }, 5000)
+              }, 2000)
             }
           })
           .catch(({response}) => {
@@ -320,7 +322,7 @@ export default {
               setTimeout(() => {
                 this.modal.instance(`hire-${id}`).hide()
                 this.loadCandidate(id);
-              }, 5000)
+              }, 2000)
             }
           })
           .catch(({response}) => {
