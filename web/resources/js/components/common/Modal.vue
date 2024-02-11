@@ -4,7 +4,6 @@
             :class="buttonClass"
             :data-modal-target="id"
             :data-modal-toggle="id"
-
             type="button">
       {{ button }}
     </button>
@@ -38,7 +37,8 @@
 
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
-              <slot name="content" v-bind:data="data">Modal content</slot>
+              <slot v-bind:data="data"></slot>
+              <slot name="content" v-bind:data="data"></slot>
             </div>
 
             <!-- Modal footer -->
@@ -115,7 +115,7 @@ export default {
       default: 'Modal'
     },
     ok: {
-      type: String,
+      type: [String, Boolean],
       default: 'Ok'
     },
     okClass: {
@@ -123,7 +123,7 @@ export default {
       default: 'text-white bg-teal-700 hover:bg-teal-800 focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800'
     },
     cancel: {
-      type: String,
+      type: [String, Boolean],
       default: 'Cancel'
     },
     cancelClass: {
@@ -148,8 +148,7 @@ export default {
     },
     okCallback: {
       type: Function,
-      default: () => {
-      },
+      default: null,
     },
     cancelCallback: {
       type: Function,
@@ -163,10 +162,11 @@ export default {
   },
   data() {
     return {
-      modal: modal.instance(this.id),
+      modal: null,
     }
   },
   async mounted() {
+    this.modal = modal.instance(this.id);
     this.$nextTick(function () {
       modal.handle(this.id);
     })

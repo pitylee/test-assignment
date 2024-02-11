@@ -25,12 +25,19 @@
       </div>
     </div>
 
-    <div class="p-10">
-      <h1 class="text-4xl font-bold">Candidates</h1>
+    <div class="pt-10 pl-10">
+      <h1 class="text-2xl font-bold">Candidates</h1>
     </div>
     <LoadingWrapper :loading="loading">
       <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-        <div v-for="(candidate, key) in candidates" class="rounded overflow-hidden shadow-lg flex flex-col">
+        <div
+            v-for="(candidate, key) in candidates"
+            :class="[
+                (candidate.hired || false) ? 'shadow-sm shadow-teal-100' : (
+                    (candidate.messages.contacted || false) ? 'shadow-sm shadow-blue-300' : null
+                )
+            ]"
+            class="flex flex-col rounded overflow-hidden shadow-lg">
           <img alt="" class="w-full" src="/avatar.png">
           <div class="px-6 py-4">
             <div class="font-bold text-xl mb-2">{{ candidate.name }}</div>
@@ -54,18 +61,23 @@
             <div class="w-1/2 flex items-center opacity-30">
               <!-- Center vertically -->
               <div class="h-full pb-2 flex flex-col justify-center">
-                <div
-                    v-if="typeof candidate.messages.contacted || false"
-                    class="bg-teal-100 text-teal-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-teal-700 dark:text-teal-400 border border-teal-500 select-none">
-                  <svg aria-hidden="true" class="w-2.5 h-2.5 me-1.5 fill-green-500" fill="currentColor"
-                       viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586Z"/>
-                  </svg>
-                  <span class="pl-2">{{ candidate.messages.ago || 'Contacted' }}</span>
+                <div class="inline-block">
+                  <div v-if="candidate.messages.contacted || false"
+                       class="inline-block bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-blue-700 dark:text-blue-400 border border-blue-500 select-none">
+                    <BriefcaseIcon class="w-3 h-3 me-1.5 text-blue-500"/>
+                    <span class="pl-1">{{ candidate.messages.ago || 'Contacted' }}</span>
+                  </div>
+
+                  <div v-if="true"
+                       class="inline-block bg-teal-100 text-teal-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-teal-700 dark:text-teal-400 border border-teal-500 select-none">
+                    <AnnotationIcon class="w-3 h-3 me-1.5 text-teal-500"/>
+                    <span class="pl-1">{{ candidate.messages.hired || 'Hired' }}</span>
+                  </div>
                 </div>
               </div>
+              <!-- bottom stick end -->
             </div>
+            <!-- left end -->
 
             <div class="w-1/2 flex justify-center items-center">
 
@@ -77,7 +89,7 @@
                   :okCallback="() => sendMessage(candidate)"
                   :title="`Contact ${candidate.name}`"
                   button="Contact"
-                  buttonClass="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                  buttonClass="font-semibold py-2 px-4 rounded shadow hover:bg-teal-200 dark:bg-gray-100 dark:text-gray-100 border border-gray-200 bg-gray-100 text-gray-800"
                   cancel="Close"
                   ok="Send"
               >
@@ -88,10 +100,20 @@
 
               <div class="ml-2"/>
 
-              <button
-                  class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 hover:bg-teal-100 rounded shadow">
-                Hire
-              </button>
+              <template name="hire">
+                <Modal
+                    v-if="candidate.messages.contacted || false"
+                    :id="`hire-disabled-${candidate.id}`"
+                    :cancel="false"
+                    :loading="modalLoading"
+                    :title="`Contact ${candidate.name} first`"
+                    button="Hire"
+                    buttonClass="font-semibold py-2 px-4 rounded shadow dark:bg-gray-300 dark:text-gray-100 border border-gray-300 bg-gray-300 text-gray-400"
+                    ok="I understand"
+                >
+                  You must contact the candidate first to be able to hire them!
+                </Modal>
+              </template>
 
             </div>
           </div>
@@ -113,10 +135,11 @@ import {modal} from '~libraries/Modal';
 import Modal from "~common/Modal.vue";
 import ContactForm from "./partials/ContactForm.vue";
 import ContactModel from "../../../models/ContactModel";
+import {BriefcaseIcon, AnnotationIcon} from '@vue-hero-icons/solid'
 
 export default {
   name: 'Candidates',
-  components: {ContactForm, Modal, LoadingWrapper},
+  components: {ContactForm, Modal, LoadingWrapper, BriefcaseIcon, AnnotationIcon},
   data() {
     return {
       modal,
