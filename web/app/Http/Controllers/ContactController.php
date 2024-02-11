@@ -13,22 +13,29 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
+    /**
+     * Rules for contact endpoint
+     */
     public const CONTACT_RULES = [
         'id' => 'required|numeric|exists:candidates,id',
         'subject' => 'required|string',
         'message' => 'required|string',
     ];
 
+    /**
+     * @param ContactService $contactService
+     */
     public function __construct(
         protected ContactService $contactService,
-    )
-    {
+    ) {
     }
 
     /**
-     * @throws \Exception
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|true[]
+     * @throws \Throwable
      */
-    public function contact(Request $request)
+    public function contact(Request $request): array|\Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), self::CONTACT_RULES);
 

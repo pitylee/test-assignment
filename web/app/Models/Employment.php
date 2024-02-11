@@ -33,7 +33,7 @@ class Employment extends Model
     /**
      * Get the company associated with the employment.
      */
-    public function company()
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
@@ -41,7 +41,7 @@ class Employment extends Model
     /**
      * Get the user associated with the employment.
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -49,7 +49,7 @@ class Employment extends Model
     /**
      * Get the candidate associated with the employment.
      */
-    public function candidate()
+    public function candidate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Candidate::class);
     }

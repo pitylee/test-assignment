@@ -10,14 +10,30 @@ use Illuminate\Support\Facades\Auth;
 
 final class CandidateService
 {
+    /**
+     * Amount that will be applied on the wallet
+     */
     public const AMOUNT = -5;
 
+    /**
+     * @param WalletService $walletService
+     */
     public function __construct(
         private WalletService $walletService,
-    )
-    {
+    ) {
     }
 
+    /**
+     * Will create employment entry for given candidate on company, by user.
+     *
+     * If it succeeds, subtracts AMOUNT coins from wallet, if fails puts back into the wallet.
+     *
+     * Returns success boolean or throws Exception that will be handled elsewhere.
+     *
+     * @param int $candidateId
+     * @return true[]
+     * @throws \Throwable
+     */
     public function hire(int $candidateId): array
     {
         $userId = Auth::id();

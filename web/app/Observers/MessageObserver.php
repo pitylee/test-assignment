@@ -14,7 +14,7 @@ class MessageObserver
      * @param \App\Models\Message $message
      * @return void
      */
-    public function created(Message $message)
+    public function created(Message $message): void
     {
         $emails = [
             $message->candidate()->first()->email,

@@ -9,14 +9,34 @@ use Illuminate\Support\Facades\Auth;
 
 final class ContactService
 {
+    /**
+     *  Amount that will be applied on the wallet
+     */
     public const AMOUNT = 5;
 
+    /**
+     * @param WalletService $walletService
+     */
     public function __construct(
         private WalletService $walletService,
-    )
-    {
+    ) {
     }
 
+    /**
+     * Will create a Message entry for given candidate by company, initialized by user.
+     *
+     * The Model will handle the email sending to the candidate email via ModelObserver
+     *
+     * If it succeeds, subtracts AMOUNT coins from wallet, if fails puts back into the wallet.
+     *
+     * Returns success boolean or throws Exception that will be handled elsewhere.
+     *
+     * @param int $id
+     * @param string $message
+     * @param string|null $subject
+     * @return true[]
+     * @throws \Throwable
+     */
     public function sendEmail(int $id, string $message, ?string $subject = null): array
     {
         $user = User::find(Auth::id())->first();

@@ -26,6 +26,9 @@ class Message extends Model
      */
     protected $hidden = [];
 
+    /**
+     * @var string[]
+     */
     protected $with = [
         'user',
         'candidate',
@@ -34,7 +37,7 @@ class Message extends Model
     /**
      * The user that sent the message
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -42,7 +45,7 @@ class Message extends Model
     /**
      * The user that sent the message
      */
-    public function company()
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
@@ -50,7 +53,7 @@ class Message extends Model
     /**
      * The candidate the message was sent to
      */
-    public function candidate()
+    public function candidate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Candidate::class, 'candidate_id');
     }

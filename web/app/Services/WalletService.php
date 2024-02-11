@@ -10,10 +10,26 @@ use Mockery\Exception;
 
 final class WalletService
 {
+    /**
+     *
+     */
     public function __construct()
     {
     }
 
+    /**
+     * Will subtract the amount of coins from Wallet's coins, both given as parameter; keeps track of previous and current coins standings.
+     *
+     * Possible to save metadata along.
+     *
+     * The transaction gets saved into WalletTransactions.
+     *
+     * @param int $amount
+     * @param Wallet $wallet
+     * @param array $metadata
+     * @return bool
+     * @throws \Throwable
+     */
     public function chargeAmount(int $amount, Wallet $wallet, array $metadata = []): bool
     {
         $previousAmount = $wallet->coins;

@@ -47,6 +47,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $with = [
         'company',
     ];
@@ -54,7 +57,7 @@ class User extends Authenticatable
     /**
      * Company the user belongs to
      */
-    public function company()
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
@@ -62,7 +65,7 @@ class User extends Authenticatable
     /**
      * Company with wallet the user belongs to
      */
-    public function companyWithWallet()
+    public function companyWithWallet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id')->with('wallet');
     }
