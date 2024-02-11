@@ -1,6 +1,6 @@
 <template>
   <div
-      :class="{
+    :class="{
       'pointer-events-none relative': loading,
       [height]: loading
     }"

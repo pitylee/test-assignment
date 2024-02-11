@@ -10,8 +10,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import {store} from '~store';
 
-Vue.prototype.$store = store;
-
 Vue.use(VueRouter);
 
 import routes from './routes';

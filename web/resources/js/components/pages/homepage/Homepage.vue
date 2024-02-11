@@ -4,7 +4,7 @@
 
     <div class="flex items-center justify-center">
       <router-link :to="{ name: 'candidates'}"
-                   class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow align-middle">
+         class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow align-middle">
         Go to candidates list
       </router-link>
     </div>
