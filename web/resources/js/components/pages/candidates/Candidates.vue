@@ -25,32 +25,55 @@
       </div>
     </div>
 
+    <!-- Errors -->
+    <div class="text-sm text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+
+      <template v-for="(error, key) in store.errors">
+        <div class="relative p-4 pl-8">
+          <p v-if="isDev" :id="key" class="" v-text="error?.stack"/>
+          <p v-else-if="error?.detail" :id="key" class="" v-text="error.detail"/>
+          <p v-else-if="error?.message" :id="key" class="" v-text="error.message"/>
+          <p v-else-if="error?.error" :id="key" class="" v-text="error.error"/>
+
+          <template v-for="item in error?.fields" v-if="error?.fields ?? false">
+            <p :id="`${key}`" class="">
+              <template v-for="err in item" v-if="typeof item === 'object'">
+                <span v-text="err"/>
+              </template>
+              <span v-else v-text="item"/>
+            </p>
+          </template>
+        </div>
+      </template>
+    </div>
+
     <div class="pt-10 pl-10">
       <h1 class="text-2xl font-bold">Candidates</h1>
     </div>
+
     <LoadingWrapper :loading="loading">
       <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
         <div
             v-for="(candidate, key) in candidates"
             :class="[
-                (candidate.hired || false) ? 'shadow-sm shadow-teal-100' : (
-                    (candidate.messages.contacted || false) ? 'shadow-sm shadow-blue-300' : null
+                (candidate?.hired || false) ? 'shadow-sm shadow-teal-100' : (
+                    (candidate?.messages.contacted || false) ? 'shadow-sm shadow-blue-300' : null
                 )
             ]"
             class="flex flex-col rounded overflow-hidden shadow-lg">
           <img alt="" class="w-full" src="/avatar.png">
           <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2">{{ candidate.name }}</div>
-            <p class="text-gray-700 text-base">{{ candidate.description }}</p>
+            <div class="font-bold text-xl mb-2">{{ candidate?.name }}</div>
+            <p class="text-gray-700 text-base">{{ candidate?.description }}</p>
           </div>
           <div class="px-6 pt-4 pb-2">
-            <span v-for="strength in candidate.strengths"
+            <span v-for="strength in candidate?.strengths"
                   class="inline-block bg-gray-200  rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
               {{ strength }}
             </span>
           </div>
           <div class="px-6 pb-2">
-            <span v-for="skill in candidate.soft_skills"
+            <span v-for="skill in candidate?.soft_skills"
                   class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
               {{ skill }}
             </span>
@@ -62,16 +85,16 @@
               <!-- Center vertically -->
               <div class="h-full pb-2 flex flex-col justify-center">
                 <div class="inline-block">
-                  <div v-if="candidate.messages.contacted || false"
+                  <div v-if="candidate?.messages.contacted || false"
                        class="inline-block bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-blue-700 dark:text-blue-400 border border-blue-500 select-none">
                     <BriefcaseIcon class="w-3 h-3 me-1.5 text-blue-500"/>
-                    <span class="pl-1">{{ candidate.messages.ago || 'Contacted' }}</span>
+                    <span class="pl-1">{{ candidate?.messages.ago || 'Contacted' }}</span>
                   </div>
 
-                  <div v-if="true"
+                  <div v-if="candidate?.hired || false"
                        class="inline-block bg-teal-100 text-teal-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-teal-700 dark:text-teal-400 border border-teal-500 select-none">
                     <AnnotationIcon class="w-3 h-3 me-1.5 text-teal-500"/>
-                    <span class="pl-1">{{ candidate.messages.hired || 'Hired' }}</span>
+                    <span class="pl-1">{{ candidate?.hired?.ago || 'Hired' }}</span>
                   </div>
                 </div>
               </div>
@@ -82,12 +105,12 @@
             <div class="w-1/2 flex justify-center items-center">
 
               <Modal
-                  :id="`contact-${candidate.id}`"
+                  :id="`contact-${candidate?.id}`"
                   :data="candidates[key]"
                   :loading="modalLoading"
-                  :no-interact="candidate.success || false"
+                  :no-interact="candidate?.success || false"
                   :okCallback="() => sendMessage(candidate)"
-                  :title="`Contact ${candidate.name}`"
+                  :title="`Contact ${candidate?.name}`"
                   button="Contact"
                   buttonClass="font-semibold py-2 px-4 rounded shadow hover:bg-teal-200 dark:bg-gray-100 dark:text-gray-100 border border-gray-200 bg-gray-100 text-gray-800"
                   cancel="Close"
@@ -102,11 +125,11 @@
 
               <template name="hire">
                 <Modal
-                    v-if="candidate.messages.contacted || false"
-                    :id="`hire-disabled-${candidate.id}`"
+                    v-if="candidate?.messages.contacted !== true"
+                    :id="`hire-disabled-${candidate?.id}`"
                     :cancel="false"
                     :loading="modalLoading"
-                    :title="`Contact ${candidate.name} first`"
+                    :title="`Contact ${candidate?.name} first`"
                     button="Hire"
                     buttonClass="font-semibold py-2 px-4 rounded shadow dark:bg-gray-300 dark:text-gray-100 border border-gray-300 bg-gray-300 text-gray-400"
                     ok="I understand"
@@ -136,10 +159,11 @@ import Modal from "~common/Modal.vue";
 import ContactForm from "./partials/ContactForm.vue";
 import ContactModel from "../../../models/ContactModel";
 import {BriefcaseIcon, AnnotationIcon} from '@vue-hero-icons/solid'
+import GlobalErrors from "~common/GlobalErrors.vue";
 
 export default {
   name: 'Candidates',
-  components: {ContactForm, Modal, LoadingWrapper, BriefcaseIcon, AnnotationIcon},
+  components: {GlobalErrors, ContactForm, Modal, LoadingWrapper, BriefcaseIcon, AnnotationIcon},
   data() {
     return {
       modal,
@@ -151,7 +175,8 @@ export default {
       candidates: [],
       desiredStrengths: [
         'Vue.js', 'Laravel', 'PHP', 'TailwindCSS'
-      ]
+      ],
+      isDev: process.env.NODE_ENV === 'development'
     }
   },
   methods: {
@@ -163,13 +188,13 @@ export default {
       this.modalLoading = true;
       const contactModel = new ContactModel();
       contactModel.form = {
-        id: candidate.id,
+        id: candidate?.id,
         ...{
-          subject: candidate.subject,
-          message: candidate.message,
+          subject: candidate?.subject,
+          message: candidate?.message,
         },
       };
-      const candidateKey = this.candidates.findIndex(entry => entry.id === candidate.id);
+      const candidateKey = Object.keys(this.candidates).find(key => this.candidates[key].id === candidate.id);
       this.setValidated(candidateKey, null);
       this.candidates[candidateKey].success = false;
       this.candidates[candidateKey].loading = this.modalLoading;
@@ -178,14 +203,15 @@ export default {
       await contactModel.sendMessage()
           .then(({data}) => {
             if (data?.success === true) {
+              this.loadCoins();
               this.candidates[candidateKey].success = true;
               this.candidates[candidateKey].loading = this.modalLoading;
               this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
-              this.loadCoins();
 
+              console.log(candidate);
               setTimeout(() => {
-                this.modal.instance(`contact-${candidate.id}`).hide()
-                this.candidates[candidateKey].success = false;
+                this.modal.instance(`contact-${candidate?.id}`).hide()
+                this.loadCandidate(candidate.id);
               }, 5000)
             }
           })
@@ -197,6 +223,9 @@ export default {
             this.setValidated(candidateKey, errors);
             this.candidates[candidateKey].success = false;
             this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
+
+            // show global errors
+            store.setErrors({fields: errors});
           })
           .finally(() => {
             this.modalLoading = false;
@@ -208,8 +237,25 @@ export default {
       this.loadingCoins = true;
       await me(true)
           .then(() => {
-            this.coins = store.get('me')?.company?.wallet?.coins ?? '?';
+            this.coins = store.get('me')?.company_with_wallet?.wallet?.coins ?? '?';
             this.loadingCoins = false;
+          })
+          .catch((errors) => store.setErrors(errors));
+    },
+    loadCandidate: async function (id) {
+      const model = new CandidateModel();
+      this.loading = true;
+      await model.find(id)
+          .then((data) => {
+            this.candidates[id] = data;
+            this.candidates[id].loading = this.loading;
+            this.$set(this.candidates, id, this.candidates[id]);
+          })
+          .catch((errors) => store.setErrors(errors))
+          .finally(() => {
+            this.loading = false;
+            this.candidates[id].loading = this.loading;
+            this.$set(this.candidates, id, this.candidates[id]);
           });
     },
   },
@@ -219,22 +265,12 @@ export default {
 
     const candidateModel = new CandidateModel();
     candidateModel.all()
-        .then((data) => {
-          this.candidates = data.data.map((candidate) => {
-            return {
-              ...candidate,
-              strengths: JSON.parse(candidate.strengths),
-              soft_skills: JSON.parse(candidate.soft_skills),
-            };
-          });
+        .then((response) => {
+          this.candidates = response.data;
           this.loading = false;
         })
-        .catch(() => null);
+        .catch((errors) => store.setErrors(errors));
 
-    this.$nextTick(function () {
-      // Code that will run only after the
-      // entire view has been rendered
-    })
   },
 }
 </script>

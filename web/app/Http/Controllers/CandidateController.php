@@ -15,7 +15,7 @@ class CandidateController extends Controller
 {
     public function candidates()
     {
-        return [
+        return response()->json([
             'data' => Candidate::limit(2)->get()->mapWithKeys(function ($candidate, $key) {
                 $messagesBetweenUserAndCandidate = Message::where([
                     ['user_id', '=', Auth::id()],
@@ -24,13 +24,13 @@ class CandidateController extends Controller
                 $candidate->messages = [
                     'count' => $messagesBetweenUserAndCandidate->count(),
                     'contacted' => $messagesBetweenUserAndCandidate->count() > 0,
-                    'ago' => $messagesBetweenUserAndCandidate->orderBy('created_at', 'desc')->first()->created_at->diffForHumans(),
+                    'ago' => $messagesBetweenUserAndCandidate->orderBy('created_at', 'desc')->first()?->created_at->diffForHumans() ?? null,
                 ];
 
                 return [$candidate->id => $candidate];
-            }),
+            })->toArray(),
             'auth' => Auth::check(),
-        ];
+        ]);
     }
 
     public function candidate(string $id)
@@ -43,7 +43,7 @@ class CandidateController extends Controller
             $candidate->messages = [
                 'count' => $messagesBetweenUserAndCandidate->count(),
                 'contacted' => $messagesBetweenUserAndCandidate->count() > 0,
-                'ago' => $messagesBetweenUserAndCandidate->orderBy('created_at', 'desc')->first()->created_at->diffForHumans(),
+                'ago' => $messagesBetweenUserAndCandidate->orderBy('created_at', 'desc')->first()?->created_at->diffForHumans() ?? null,
             ];
 
             return $candidate;
