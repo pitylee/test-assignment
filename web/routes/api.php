@@ -30,6 +30,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Candidate
     Route::get('candidates', [CandidateController::class, 'candidates']);
     Route::get('candidates/{id}', [CandidateController::class, 'candidate']);
+    Route::post('candidates/hire', [CandidateController::class, 'hire']);
 
     // Contact
     Route::post('contact', [ContactController::class, 'contact']);

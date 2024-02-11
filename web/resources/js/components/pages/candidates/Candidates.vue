@@ -26,26 +26,7 @@
     </div>
 
     <!-- Errors -->
-    <div class="text-sm text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-
-      <template v-for="(error, key) in store.errors">
-        <div class="relative p-4 pl-8">
-          <p v-if="isDev" :id="key" class="" v-text="error?.stack"/>
-          <p v-else-if="error?.detail" :id="key" class="" v-text="error.detail"/>
-          <p v-else-if="error?.message" :id="key" class="" v-text="error.message"/>
-          <p v-else-if="error?.error" :id="key" class="" v-text="error.error"/>
-
-          <template v-for="item in error?.fields" v-if="error?.fields ?? false">
-            <p :id="`${key}`" class="">
-              <template v-for="err in item" v-if="typeof item === 'object'">
-                <span v-text="err"/>
-              </template>
-              <span v-else v-text="item"/>
-            </p>
-          </template>
-        </div>
-      </template>
-    </div>
+    <GlobalErrors :value="store._state.errors" @remove-error="(key) => { store.setErrors({}, key); $forceUpdate(); }"/>
 
     <div class="pt-10 pl-10">
       <h1 class="text-2xl font-bold">Candidates</h1>
@@ -125,6 +106,56 @@
 
               <template name="hire">
                 <Modal
+                    v-if="candidate?.messages.contacted === true && !candidate?.hired"
+                    :id="`hire-${candidate?.id}`"
+                    :loading="modalLoading"
+                    :okCallback="() => hire(candidate?.id)"
+                    :title="`Hire ${candidate?.name}`"
+                    button="Hire"
+                    buttonClass="font-semibold py-2 px-4 rounded shadow hover:bg-teal-200 dark:bg-gray-100 dark:text-gray-100 border border-gray-200 bg-gray-100 text-gray-800"
+                    cancel="No"
+                    ok="Yes"
+                >
+                  Are you sure you want to hire them?
+
+                  <template v-if="candidate.success">
+                    <p class="mt-2 text-sm text-green-600 dark:text-green-500">
+                      Success
+                    </p>
+                  </template>
+
+                  <template v-if="typeof candidate.validated === 'string'">
+                    <p id="contact-error" class="mt-2 text-sm text-red-600 dark:text-red-500">
+                      {{ candidate.validated }}
+                    </p>
+                  </template>
+
+                  <template v-if="typeof candidate.validated === 'string'" v-slot:buttons="slotProps">
+                    <button
+                        :data-modal-hide="`hire-${candidate.id}`"
+                        class="px-5 py-2.5 font-medium text-sm text-center border rounded-lg focus:z-10 focus:ring-4 focus:outline-none"
+                        type="button"
+                        v-on:click="() => { modal.instance(`hire-${candidate?.id}`).hide(); loadCandidate(candidate.id); }">
+                      Close
+                    </button>
+                  </template>
+
+                </Modal>
+
+                <Modal
+                    v-else-if="candidate?.hired || false"
+                    :id="`hired-${candidate?.id}`"
+                    :cancel="false"
+                    :loading="modalLoading"
+                    :title="`${candidate?.name} is hired`"
+                    button="Hire"
+                    buttonClass="font-semibold py-2 px-4 rounded shadow dark:bg-gray-300 dark:text-gray-100 border border-gray-300 bg-gray-300 text-gray-400"
+                    ok="I understand"
+                >
+                  You must contact the candidate first to be able to hire them!
+                </Modal>
+
+                <Modal
                     v-if="candidate?.messages.contacted !== true"
                     :id="`hire-disabled-${candidate?.id}`"
                     :cancel="false"
@@ -176,6 +207,7 @@ export default {
       desiredStrengths: [
         'Vue.js', 'Laravel', 'PHP', 'TailwindCSS'
       ],
+      candidateModel: null,
       isDev: process.env.NODE_ENV === 'development'
     }
   },
@@ -208,7 +240,6 @@ export default {
               this.candidates[candidateKey].loading = this.modalLoading;
               this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
 
-              console.log(candidate);
               setTimeout(() => {
                 this.modal.instance(`contact-${candidate?.id}`).hide()
                 this.loadCandidate(candidate.id);
@@ -242,10 +273,20 @@ export default {
           })
           .catch((errors) => store.setErrors(errors));
     },
-    loadCandidate: async function (id) {
-      const model = new CandidateModel();
+    loadCandidates: async function () {
       this.loading = true;
-      await model.find(id)
+
+      this.candidateModel.all()
+          .then((response) => {
+            this.candidates = response.data;
+            this.loading = false;
+          })
+          .catch((errors) => store.setErrors(errors));
+    },
+    loadCandidate: async function (id) {
+      this.loading = true;
+
+      await this.candidateModel.find(id)
           .then((data) => {
             this.candidates[id] = data;
             this.candidates[id].loading = this.loading;
@@ -258,19 +299,60 @@ export default {
             this.$set(this.candidates, id, this.candidates[id]);
           });
     },
+    hire: async function (id) {
+      this.loading = true;
+
+      const candidateKey = Object.keys(this.candidates).find(key => this.candidates[key].id === id);
+
+      this.setValidated(candidateKey, null);
+      this.candidates[candidateKey].success = false;
+      this.candidates[candidateKey].loading = this.modalLoading;
+      this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
+
+      await this.candidateModel.hire(id)
+          .then((data) => {
+            if (data?.success === true) {
+              this.loadCoins();
+              this.candidates[candidateKey].success = true;
+              this.candidates[candidateKey].loading = this.modalLoading;
+              this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
+
+              setTimeout(() => {
+                this.modal.instance(`hire-${id}`).hide()
+                this.loadCandidate(id);
+              }, 5000)
+            }
+          })
+          .catch(({response}) => {
+            let errors = response?.data;
+            if (typeof errors?.message === 'string') {
+              errors = errors?.message;
+            }
+            this.setValidated(candidateKey, errors);
+            this.candidates[candidateKey].success = false;
+            this.$set(this.candidates, candidateKey, this.candidates[candidateKey]);
+
+            // show global errors
+            store.setErrors({message: errors});
+          })
+          .finally(() => {
+            this.loading = false;
+            this.candidates[id].loading = this.loading;
+            this.$set(this.candidates, id, this.candidates[id]);
+          });
+    },
   },
   async mounted() {
     await login();
     this.loadCoins();
 
-    const candidateModel = new CandidateModel();
-    candidateModel.all()
-        .then((response) => {
-          this.candidates = response.data;
-          this.loading = false;
-        })
-        .catch((errors) => store.setErrors(errors));
-
+    this.candidateModel = new CandidateModel();
+    this.loadCandidates();
   },
+  beforeUpdate() {
+    this.$nextTick(() => {
+      store._state.errors = {}
+    })
+  }
 }
 </script>

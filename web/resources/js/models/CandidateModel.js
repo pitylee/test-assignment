@@ -9,4 +9,10 @@ export default class CandidateModel extends BaseModel {
     reset() {
         Object.assign(this.form, {});
     }
+
+    hire(id) {
+        return this.custom(`${this.baseUrl}/hire`, {
+            id,
+        });
+    }
 }
