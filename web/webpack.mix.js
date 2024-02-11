@@ -65,6 +65,7 @@ mix.webpackConfig(webpack => {
                     test: /\.vue$/,
                     loader: 'vue-loader',
                     options: {
+                        compiler: require('vue-template-babel-compiler'),
                         loaders: {
                             // Customize to your liking
                             js: 'babel-loader',
