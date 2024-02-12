@@ -66,16 +66,16 @@ After this, you need to set the mysql settings in the final file to correspond t
 
 Here is the example of ports that can be used used:
 
-| Server             | Default  | Ext    |
-|--------------------|----------|--------|
-| MySQL              |  3306    | -      |
-| PHPMyAdmin         |  8000    | 8099   |
-| PHP                |  9000    | 9000   |
-| XDebug             |  9003    | 9003   |
-| Nginx              |  80      | 8098   |
-| Nginx SSL          |  443     | 4439   |
-| Hot                |  8080    | 8899   |
-| browsersync        |  3000    | 8089   |
+| Server             | Default  | Example |
+|--------------------|----------|---------|
+| MySQL              |  3306    | -       |
+| PHPMyAdmin         |  8000    | 8099    |
+| PHP                |  9000    | 9000    |
+| XDebug             |  9003    | 9003    |
+| Nginx              |  80      | 8098    |
+| Nginx SSL          |  443     | 4439    |
+| Hot                |  8080    | 8899    |
+| browsersync        |  3000    | 8089    |
 
 ## Docker network
 
@@ -124,7 +124,12 @@ Run `docker-compose run --rm frontend` to install npm dependencies and compile t
 
 You can also run `docker-compose run --rm --service-ports frontend npm run hot` after you ran the above and have the frontend setup, if you want to make changes to the project.
 
-It is possible running eslint with `docker-compose run --rm --service-ports frontend npm run eslint`.
+It is possible running eslint with `docker-compose run --rm frontend npm run eslint`.
+
+***!Note:** It is a must that you run either with npm run hot or without so that files get compiled to your env!*
+
+<span style="color:red;font-style:italic;">**!Important:**</span>
+*Always provide --rm and --service-ports so that the temporary frontend container will be removed and it can communicate through service ports!*
 
 ## PHPMyAdmin
 
@@ -145,10 +150,13 @@ Make sure your ide is listening on the configured port with telnet or netcat:
 
 `
 telnet IP 9003
+`
+or
+`
 nc -vz IP 9003
 `
 
-***!Note:** See the xdebug ini file for configuration, and consult your ide extension documentation for how to configure it!*
+***!Note:** See the xdebug ini file, you can rename the given example, adjust the configuration configuration, and consult your ide extension documentation for how to configure it!*
 
 
 ## Commands

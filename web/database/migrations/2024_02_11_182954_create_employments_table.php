@@ -14,9 +14,9 @@ return new class extends Migration {
     {
         Schema::create('employments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('candidate_id')->index()->constrained('candidates')->cascadeOnDelete();
-            $table->foreignId('company_id')->index()->constrained('companies')->cascadeOnDelete();
-            $table->foreignId('user_id')->index()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('candidate_id')->references('id')->on('candidates')->cascadeOnDelete();
+            $table->foreignId('company_id')->references('id')->on('companies')->cascadeOnDelete();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->json('metadata')->nullable();
             $table->timestamps();
         });

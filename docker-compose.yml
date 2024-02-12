@@ -16,7 +16,8 @@ services:
             - NGINX_HOST=${NGINX_HOST}
             - PHP_IDE_CONFIG=${PHP_IDE_CONFIG?}
         command: >
-            /bin/sh -c "envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+            /bin/sh -c "mkdir -p /var/log/nginx && touch /var/log/nginx/error.log && \
+                envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
         restart: always
         depends_on:
             - php

@@ -13,7 +13,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function ($table) {
-            $table->foreignId('company_id')->after('id')->index()->constrained('companies')->cascadeOnDelete();
+            $table->unsignedBigInteger('company_id');
+            $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete()->after('id');
         });
     }
 
